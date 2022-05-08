@@ -39,10 +39,15 @@
                 <label asp-for="Input.UserRole"></label>
                 <span asp-validation-for="Input.UserRole" class="text-danger"></span>
             </div>
-            <div class="form-floating">
-                <input asp-for="Input.Gender" type="radio" /> Male <br />
-                <input asp-for="Input.Gender" type="radio" /> Female
-            </div>
+
+            <br />
+            <input asp-for="Input.Gender" type="radio" class="btn-check" id="option1" checked value="Male"/>
+            <label class="btn btn-secondary" for="option1">Male</label>
+            <input asp-for="Input.Gender" type="radio" class="btn-check" id="option2" value="Female"/>
+            <label class="btn btn-secondary" for="option2">Female</label>
+            <br />
+            <br />
+
              <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
