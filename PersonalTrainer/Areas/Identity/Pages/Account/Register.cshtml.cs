@@ -112,6 +112,15 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
 
             [Required]
             public string Gender { get; set; }
+
+            [Required, Display(Name ="First Name")]
+            public string FirstName { get; set; }
+
+            [Required, Display(Name ="Last Name")]
+            public string LastName { get; set; }
+
+            [Required, Display(Name ="Date of birth")]
+            public DateTime DateOfBirth { get; set; }
         }
 
 
@@ -132,6 +141,9 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 user.Gender = Input.Gender;
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.DateofBirth = Input.DateOfBirth;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
