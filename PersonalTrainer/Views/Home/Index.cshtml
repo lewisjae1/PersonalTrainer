@@ -1,9 +1,34 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<MyCustomUser> SignInManager
+@inject UserManager<MyCustomUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to Personal Trainer Website!</h1>
-    <h2 class="display-6">To start, log in or register!</h2>
-        <partial name="_LoginPartial" id="register/login_button"/>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        </li>
+        <li class="nav-item">
+            <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome to Personal Trainer Website!</h1>
+        <h2 class="display-6">To start, log in or register!</h2>
+        <br />
+        <li style="list-style: none;">
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <br />
+        <li style="list-style: none;">
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </div>
