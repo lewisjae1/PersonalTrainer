@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PersonalTrainer.Data;
 using System.ComponentModel.DataAnnotations;
 
 namespace PersonalTrainer.Models
@@ -16,5 +17,15 @@ namespace PersonalTrainer.Models
 
         [Required]
         public DateTime DateofBirth { get; set; }
+    }
+
+    public class HomeViewModel
+    {
+        public List<MyCustomUser> CustomUsers { get; set; }
+
+        public HomeViewModel(List<MyCustomUser> customUsers)
+        {
+            CustomUsers = customUsers;
+        }
     }
 }
