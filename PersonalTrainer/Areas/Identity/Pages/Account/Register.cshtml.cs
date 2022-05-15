@@ -140,9 +140,15 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                string firstName = Input.FirstName;
+                string lastName = Input.LastName;
+
+                firstName = Capitalize(firstName);
+                lastName = Capitalize(lastName);
+
                 user.Gender = Input.Gender;
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
+                user.FirstName = firstName;
+                user.LastName = lastName;
                 user.DateofBirth = Input.DateOfBirth;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
@@ -208,6 +214,11 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<MyCustomUser>)_userStore;
+        }
+
+        private string Capitalize(string word)
+        {
+            return word.Substring(0, 1).ToUpper() + word.Substring(1).ToLower();
         }
     }
 }
