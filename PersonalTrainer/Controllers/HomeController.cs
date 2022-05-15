@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PersonalTrainer.Data;
 using PersonalTrainer.Models;
 using System.Diagnostics;
 
@@ -6,16 +9,24 @@ namespace PersonalTrainer.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+/*        private readonly ILogger<HomeController> _logger;*/
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+/*        public HomeController(ILogger<HomeController> logger)
         {
-            return View();
+            _logger = logger;
+        }*/
+
+        public async Task<IActionResult> Index()
+        {
+            List<MyCustomUser> customUsers = await _context.MyCustomUsers.ToListAsync();
+            HomeViewModel homeViewModel = new(customUsers);
+            return View(homeViewModel);
         }
 
         public IActionResult Privacy()

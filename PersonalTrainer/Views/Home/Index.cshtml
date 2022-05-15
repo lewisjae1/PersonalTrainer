@@ -1,8 +1,58 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using PersonalTrainer.Data
+@model HomeViewModel
+@inject SignInManager<MyCustomUser> SignInManager
+@inject UserManager<MyCustomUser> UserManager
+
+@{
     ViewData["Title"] = "Home Page";
+
+    string client = "3e30f4ab-04d6-4cf4-9398-3d4a33111993";
+    string trainer = "bf97dd2e-ff6c-42b7-8659-20c759aadcbd";
+
+    string firstName = "";
+    string lastName = "";
+    string role = "";
+
+    foreach (MyCustomUser user in Model.CustomUsers)
+    {
+        if(user.UserName == User.Identity.Name)
+        {
+            firstName = user.FirstName;
+            lastName = user.LastName;
+            role = user.Role;
+        }
+    }
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @if (role == client)
+        {
+            <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
+            <br />
+            <p class="fs-1">Let's Make Another Healthier Choice Today!</p>
+        }
+        else if (role== trainer)
+        {
+            <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
+            <br />
+            <p class="fs-1">Let's Make Another Positive Change to Someone's Life Today!</p>
+        }
+
+    }
+    else
+    {
+        <h1 class="display-4">Welcome to Personal Trainer Website!</h1>
+        <h2 class="display-6">To start, log in or register!</h2>
+        <br />
+        <li style="list-style: none;">
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <br />
+        <li style="list-style: none;">
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </div>

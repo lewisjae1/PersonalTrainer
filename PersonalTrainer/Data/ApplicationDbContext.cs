@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PersonalTrainer.Models;
 
 namespace PersonalTrainer.Data
 {
@@ -9,5 +10,7 @@ namespace PersonalTrainer.Data
             : base(options)
         {
         }
+
+        public DbSet<MyCustomUser> MyCustomUsers { get; set; }
     }
 }
