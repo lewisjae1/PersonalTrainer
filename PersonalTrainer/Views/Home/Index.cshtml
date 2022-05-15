@@ -6,14 +6,21 @@
 
 @{
     ViewData["Title"] = "Home Page";
+
+    string client = "3e30f4ab-04d6-4cf4-9398-3d4a33111993";
+    string trainer = "bf97dd2e-ff6c-42b7-8659-20c759aadcbd";
+
     string firstName = "";
     string lastName = "";
+    string role = "";
+
     foreach (MyCustomUser user in Model.CustomUsers)
     {
         if(user.UserName == User.Identity.Name)
         {
             firstName = user.FirstName;
             lastName = user.LastName;
+            role = user.Role;
         }
     }
 }
@@ -21,7 +28,19 @@
 <div class="text-center">
     @if (SignInManager.IsSignedIn(User))
     {
-        <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
+        @if (role == client)
+        {
+            <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
+            <br />
+            <p class="fs-1">Let's Make Another Healthier Choice Today!</p>
+        }
+        else if (role== trainer)
+        {
+            <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
+            <br />
+            <p class="fs-1">Let's Make Another Positive Change to Someone's Life Today!</p>
+        }
+
     }
     else
     {
