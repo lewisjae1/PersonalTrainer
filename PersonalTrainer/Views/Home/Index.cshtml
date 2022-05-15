@@ -1,22 +1,27 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using PersonalTrainer.Data
+@model HomeViewModel
 @inject SignInManager<MyCustomUser> SignInManager
 @inject UserManager<MyCustomUser> UserManager
 
 @{
     ViewData["Title"] = "Home Page";
+    string firstName = "";
+    string lastName = "";
+    foreach (MyCustomUser user in Model.CustomUsers)
+    {
+        if(user.UserName == User.Identity.Name)
+        {
+            firstName = user.FirstName;
+            lastName = user.LastName;
+        }
+    }
 }
 
 <div class="text-center">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-            </form>
-        </li>
+        <p class="fw-bold fs-1">Welcome @firstName @lastName!</p>
     }
     else
     {
