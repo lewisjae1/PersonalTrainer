@@ -150,6 +150,7 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 user.FirstName = firstName;
                 user.LastName = lastName;
                 user.DateofBirth = Input.DateOfBirth;
+                user.Role = Input.UserRole;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
