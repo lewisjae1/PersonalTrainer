@@ -17,9 +17,6 @@ namespace PersonalTrainer.Models
 
         [Required]
         public DateTime DateofBirth { get; set; }
-
-        [Required]
-        public string Role { get; set; }
     }
 
     public class HomeViewModel
