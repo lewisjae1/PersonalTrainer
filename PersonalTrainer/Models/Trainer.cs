@@ -14,4 +14,20 @@ namespace PersonalTrainer.Models
 
         public bool Listed { get; set; }
     }
+
+    public class TrainerListViewModel
+    {
+        public TrainerListViewModel(List<Trainer> trainers, int lastPage, int currentPage)
+        {
+            TrainerList=trainers;
+            LastPage=lastPage;
+            CurrentPage=currentPage;
+        }
+
+        public List<Trainer> TrainerList { get; set; }
+
+        public int LastPage { get; set; }
+
+        public int CurrentPage { get; set; }
+    }
 }
