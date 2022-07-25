@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using PersonalTrainer.Data;
 using PersonalTrainer.Models;
 #nullable disable
 
@@ -32,6 +33,7 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<MyCustomUser> userManager,
@@ -39,7 +41,8 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             SignInManager<MyCustomUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext applicationDbContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,6 +51,7 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             _logger = logger;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _context = applicationDbContext;
         }
 
         /// <summary>
@@ -155,6 +159,18 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (Input.UserRole == "fa8f193f-6700-4a5e-9f49-a699ee52b37a")
+                {
+                    Trainer newTrainer = new Trainer()
+                    {
+                        Id = user.Id,
+                        Listed = false
+                    };
+
+                    await _context.Trainers.AddAsync(newTrainer);
+                    await _context.SaveChangesAsync();
+                }
 
                 if (result.Succeeded)
                 {
