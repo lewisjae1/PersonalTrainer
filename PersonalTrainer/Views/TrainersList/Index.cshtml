@@ -1,0 +1,75 @@
+﻿@model TrainerListViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@if (Model.TrainerList.Count() != 0){
+    <table class="table talbe-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.TrainerList[0].TrainerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TrainerList[0].TrainerId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TrainerList[0].TrainerId)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Trainer item in Model.TrainerList) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrainerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrainerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TrainerId)
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.TrainerId">Edit</a>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.TrainerId">Details</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.TrainerId">Delete</a>
+                        <a class="btn btn-success" asp-Controller="Cart" asp-action="Add" asp-route-id="@item.TrainerId">Add to Cart</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h2>There are no games for this page</h2>
+}
+<nav aria-label="Game Catalog pages">
+    <ul class="pagination">
+        @for(int i = 1; i <= Model.LastPage; i++)
+        {
+            if(i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link">@i</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-id="@i">@i</a>
+                </li>
+            }
+            
+        }
+    </ul>
+    
+</nav>
