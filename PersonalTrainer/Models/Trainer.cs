@@ -17,14 +17,17 @@ namespace PersonalTrainer.Models
 
     public class TrainerListViewModel
     {
-        public TrainerListViewModel(List<Trainer> trainers, int lastPage, int currentPage)
+        public TrainerListViewModel(List<Trainer> trainers, List<MyCustomUser> allUsers, int lastPage, int currentPage)
         {
             TrainerList=trainers;
+            allUserList = allUsers;
             LastPage=lastPage;
             CurrentPage=currentPage;
         }
 
         public List<Trainer> TrainerList { get; set; }
+
+        public List<MyCustomUser> allUserList { get; set; }
 
         public int LastPage { get; set; }
 
