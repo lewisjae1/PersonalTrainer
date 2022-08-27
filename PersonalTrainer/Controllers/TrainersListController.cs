@@ -35,7 +35,9 @@ namespace PersonalTrainer.Controllers
                                     .Skip(NumGamesToDisplayPerPage * (currentPage - PageOffset))
                                     .Take(NumGamesToDisplayPerPage).Where(t => t.Listed == true).ToListAsync();
 
-            TrainerListViewModel TrainerListModel = new(trainers, lastPage, currentPage);
+            List<MyCustomUser> allUsers = await _context.MyCustomUsers.ToListAsync();
+
+            TrainerListViewModel TrainerListModel = new(trainers, allUsers, lastPage, currentPage);
             return View(TrainerListModel);
         }
 
