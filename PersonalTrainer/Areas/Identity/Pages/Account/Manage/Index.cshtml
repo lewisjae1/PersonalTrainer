@@ -9,8 +9,19 @@
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <h5><b>@Html.DisplayNameFor(model => model.Input.UserPhoto)</b></h5>
+                @if (Model.Input.UserPhotoURL != null)
+                {
+                    <dd class = "col-sm-10">
+                        <img style="max-width:500px;max-height:500px" src="~/images/@Model.Input.UserPhotoURL" / alt="@Model.UserName">
+                    </dd>
+                }
+                <input type="file" asp-for="Input.UserPhoto" class="form-control" autocomplete="firstname" aria-required="true" accept=".png, .jpg, .jpeg, .gif, .tif" />
+                <span asp-validation-for="Input.UserPhoto" class="text-danger"></span>
+            </div>
             <div class="form-floating">
                 <input asp-for="Username" class="form-control" disabled />
                 <label asp-for="Username" class="form-label"></label>
