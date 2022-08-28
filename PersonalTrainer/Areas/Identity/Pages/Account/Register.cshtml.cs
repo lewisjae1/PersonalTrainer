@@ -157,18 +157,21 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 firstName = Capitalize(firstName);
                 lastName = Capitalize(lastName);
 
-                string imageName = Guid.NewGuid().ToString();
-                imageName += Path.GetExtension(Input.UserPhoto.FileName);
+                if (Input.UserPhoto != null)
+                {
+                    string imageName = Guid.NewGuid().ToString();
+                    imageName += Path.GetExtension(Input.UserPhoto.FileName);
 
-                string uploadPath = Path.Combine(_environment.WebRootPath, "images", imageName);
-                using Stream fileStream = new FileStream(uploadPath, FileMode.Create);
-                await Input.UserPhoto.CopyToAsync(fileStream);
+                    string uploadPath = Path.Combine(_environment.WebRootPath, "images", imageName);
+                    using Stream fileStream = new FileStream(uploadPath, FileMode.Create);
+                    await Input.UserPhoto.CopyToAsync(fileStream);
+                    user.UserPhotoURL = imageName;
+                }
 
                 user.Gender = Input.Gender;
                 user.FirstName = firstName;
                 user.LastName = lastName;
                 user.DateofBirth = Input.DateOfBirth;
-                user.UserPhotoURL = imageName;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
