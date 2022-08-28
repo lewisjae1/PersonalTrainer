@@ -42,16 +42,15 @@ namespace PersonalTrainer.Controllers
         }
 
         // GET: TrainersList/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null || _context.Trainers == null)
             {
                 return NotFound();
             }
 
-            var trainer = await _context.Trainers
-                .Include(t => t.MyCustomUser)
-                .FirstOrDefaultAsync(m => m.TrainerId == id);
+            var trainer = await _context.MyCustomUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (trainer == null)
             {
                 return NotFound();
