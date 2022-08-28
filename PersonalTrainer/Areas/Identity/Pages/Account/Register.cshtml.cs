@@ -34,6 +34,7 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
         public RegisterModel(
             UserManager<MyCustomUser> userManager,
@@ -42,7 +43,8 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
             IEmailSender emailSender,
-            ApplicationDbContext applicationDbContext)
+            ApplicationDbContext applicationDbContext,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -52,6 +54,7 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             _roleManager = roleManager;
             _emailSender = emailSender;
             _context = applicationDbContext;
+            _environment = environment;
         }
 
         /// <summary>
@@ -126,6 +129,9 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
 
             [Required, Display(Name ="Date of birth")]
             public DateTime DateOfBirth { get; set; }
+
+            [Display(Name = "Profile Photo")]
+            public IFormFile UserPhoto { get; set; }
         }
 
 
@@ -151,10 +157,18 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 firstName = Capitalize(firstName);
                 lastName = Capitalize(lastName);
 
+                string imageName = Guid.NewGuid().ToString();
+                imageName += Path.GetExtension(Input.UserPhoto.FileName);
+
+                string uploadPath = Path.Combine(_environment.WebRootPath, "images", imageName);
+                using Stream fileStream = new FileStream(uploadPath, FileMode.Create);
+                await Input.UserPhoto.CopyToAsync(fileStream);
+
                 user.Gender = Input.Gender;
                 user.FirstName = firstName;
                 user.LastName = lastName;
                 user.DateofBirth = Input.DateOfBirth;
+                user.UserPhotoURL = imageName;
 
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
