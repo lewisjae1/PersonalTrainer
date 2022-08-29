@@ -13,5 +13,6 @@ namespace PersonalTrainer.Data
 
         public DbSet<MyCustomUser> MyCustomUsers { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<Inquiry> Inquiries { get; set; }
     }
 }

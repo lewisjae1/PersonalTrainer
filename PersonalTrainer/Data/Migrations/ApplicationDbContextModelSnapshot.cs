@@ -269,7 +269,7 @@ namespace PersonalTrainer.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Inquiries");
+                    b.ToTable("Inquiries", (string)null);
                 });
 
             modelBuilder.Entity("PersonalTrainer.Models.Trainer", b =>
@@ -291,7 +291,7 @@ namespace PersonalTrainer.Data.Migrations
 
                     b.HasIndex("Id");
 
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainers", (string)null);
                 });
 
             modelBuilder.Entity("PersonalTrainer.Models.MyCustomUser", b =>
