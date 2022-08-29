@@ -16,7 +16,7 @@
     }
 }
 
-<h1>Index</h1>
+<h1>Trainer List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -66,9 +66,9 @@
 }
 else
 {
-    <h2>There are no games for this page</h2>
+    <h2>There are no trainers for this page</h2>
 }
-<nav aria-label="Game Catalog pages">
+<nav aria-label="Trainer List Page">
     <ul class="pagination">
         @for(int i = 1; i <= Model.LastPage; i++)
         {
