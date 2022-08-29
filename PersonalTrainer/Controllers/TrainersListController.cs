@@ -79,13 +79,26 @@ namespace PersonalTrainer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inquiry(Inquiry newInquiry)
         {
-            newInquiry.Status = "Pending";
+            List<Inquiry> inquiries = await _context.Inquiries.ToListAsync();
 
-            await _context.Inquiries.AddAsync(newInquiry);
-            await _context.SaveChangesAsync();
+            for (int i = 0; i < inquiries.Count(); i++)
+            {
+                if (inquiries[i].Id == newInquiry.Id && inquiries[i].TrainerId == newInquiry.TrainerId)
+                {
+                    ViewData["Message"] = "Inquiry has already been sent!";
+                }
+            }
 
-            ViewData["Message"] = "Successfully Submitted!";
+            if (ViewData["Message"] != "Inquiry has already been sent!")
+            {
+                newInquiry.Status = "Pending";
 
+                await _context.Inquiries.AddAsync(newInquiry);
+                await _context.SaveChangesAsync();
+
+                ViewData["Message"] = "Successfully submitted!";
+
+            }
 
             return View();
         }
