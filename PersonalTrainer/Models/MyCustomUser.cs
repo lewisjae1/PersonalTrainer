@@ -25,6 +25,8 @@ namespace PersonalTrainer.Models
         public string UserPhotoURL { get; set; }
 
         public ICollection<Trainer> Trainers { get; set; }
+
+        public ICollection<Inquiry> Inquiries { get; set; }
     }
 
     public class HomeViewModel

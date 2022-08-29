@@ -13,6 +13,8 @@ namespace PersonalTrainer.Models
         public MyCustomUser MyCustomUser { get; set; }
 
         public bool Listed { get; set; }
+
+        public ICollection<Inquiry> Inquiries { get; set; }
     }
 
     public class TrainerListViewModel
