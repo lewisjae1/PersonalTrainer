@@ -5,7 +5,8 @@
 @{
     ViewData["Title"] = "Meal/Workout Plan";
 
-    List<MyCustomUser> trainerInfo = new();
+    List<MyCustomUser> pendingTrainerInfo = new();
+    List<MyCustomUser> AcceptedTrainerInfo = new();
 
     for (int i = 0; i < Model.Trainers.Count(); i++)
     {
@@ -15,9 +16,14 @@
             {
                 for (int k = 0; k < Model.AllUsers.Count(); k++)
                 {
-                    if (Model.Trainers[i].Id == Model.AllUsers[k].Id && !trainerInfo.Contains(Model.AllUsers[k]))
+                    if (Model.Trainers[i].Id == Model.AllUsers[k].Id && !pendingTrainerInfo.Contains(Model.AllUsers[k]) &&
+                        Model.Inquiries[j].Status == "Pending")
                     {
-                        trainerInfo.Add(Model.AllUsers[k]);
+                        pendingTrainerInfo.Add(Model.AllUsers[k]);
+                    }
+                    else if(Model.Trainers[i].Id == Model.AllUsers[k].Id && !pendingTrainerInfo.Contains(Model.AllUsers[k]) &&
+                            Model.Inquiries[j].Status == "Accepted") {
+                        AcceptedTrainerInfo.Add(Model.AllUsers[k]);
                     }
                 }
             }
@@ -45,7 +51,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (MyCustomUser item in trainerInfo) {
+            @foreach (MyCustomUser item in AcceptedTrainerInfo) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    @foreach (Trainer trainers in Model.Trainers)
+                    {
+                        if (trainers.Id == item.Id)
+                        {
+                            foreach (Inquiry inquiries in Model.Inquiries)
+                            {
+                                if (inquiries.TrainerId == trainers.TrainerId)
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => inquiries.Status)
+                                    </td>
+                                    <td>
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Meal Plan</a>
+                                            <a class="btn btn-primary" asp-action="Inquiry" asp-route-id="@item.Id">Workout Plan</a>
+                                    </td>
+                                }
+                            }
+                        }
+                    }
+                </tr>
+            }
+            @foreach (MyCustomUser item in pendingTrainerInfo) {
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.FirstName)
