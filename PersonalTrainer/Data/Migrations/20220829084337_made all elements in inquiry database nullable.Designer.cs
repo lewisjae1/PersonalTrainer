@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalTrainer.Data;
 
@@ -11,9 +12,10 @@ using PersonalTrainer.Data;
 namespace PersonalTrainer.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220829084337_made all elements in inquiry database nullable")]
+    partial class madeallelementsininquirydatabasenullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -294,63 +296,6 @@ namespace PersonalTrainer.Data.Migrations
                     b.ToTable("Trainers");
                 });
 
-            modelBuilder.Entity("PersonalTrainer.Models.WorkoutPlan", b =>
-                {
-                    b.Property<int>("WorkoutPlanId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WorkoutPlanId"), 1L, 1);
-
-                    b.Property<string>("DayOfWeek")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Exercise")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Id")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("InquiryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rep")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RepUnit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Set")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainderId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("WeekOf")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Weight")
-                        .HasColumnType("float");
-
-                    b.Property<string>("WeightUnit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("WorkoutPlanId");
-
-                    b.HasIndex("Id");
-
-                    b.HasIndex("InquiryId");
-
-                    b.HasIndex("TrainderId");
-
-                    b.ToTable("workoutPlans");
-                });
-
             modelBuilder.Entity("PersonalTrainer.Models.MyCustomUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -454,43 +399,9 @@ namespace PersonalTrainer.Data.Migrations
                     b.Navigation("MyCustomUser");
                 });
 
-            modelBuilder.Entity("PersonalTrainer.Models.WorkoutPlan", b =>
-                {
-                    b.HasOne("PersonalTrainer.Models.MyCustomUser", "MyCustomUser")
-                        .WithMany("workoutPlans")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersonalTrainer.Models.Inquiry", "Inquiry")
-                        .WithMany("workoutPlans")
-                        .HasForeignKey("InquiryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersonalTrainer.Models.Trainer", "Trainer")
-                        .WithMany("workoutPlans")
-                        .HasForeignKey("TrainderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Inquiry");
-
-                    b.Navigation("MyCustomUser");
-
-                    b.Navigation("Trainer");
-                });
-
-            modelBuilder.Entity("PersonalTrainer.Models.Inquiry", b =>
-                {
-                    b.Navigation("workoutPlans");
-                });
-
             modelBuilder.Entity("PersonalTrainer.Models.Trainer", b =>
                 {
                     b.Navigation("Inquiries");
-
-                    b.Navigation("workoutPlans");
                 });
 
             modelBuilder.Entity("PersonalTrainer.Models.MyCustomUser", b =>
@@ -498,8 +409,6 @@ namespace PersonalTrainer.Data.Migrations
                     b.Navigation("Inquiries");
 
                     b.Navigation("Trainers");
-
-                    b.Navigation("workoutPlans");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,142 @@
+﻿@model ClientInquiryListViewModel
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<MyCustomUser> UserManager
+
+@{
+    ViewData["Title"] = "Meal/Workout Plan";
+
+    List<MyCustomUser> pendingTrainerInfo = new();
+    List<MyCustomUser> AcceptedTrainerInfo = new();
+
+    for (int i = 0; i < Model.Trainers.Count(); i++)
+    {
+        for (int j = 0; j < Model.Inquiries.Count(); j++)
+        {
+            if (Model.Trainers[i].TrainerId == Model.Inquiries[j].TrainerId)
+            {
+                for (int k = 0; k < Model.AllUsers.Count(); k++)
+                {
+                    if (Model.Trainers[i].Id == Model.AllUsers[k].Id && !pendingTrainerInfo.Contains(Model.AllUsers[k]) &&
+                        Model.Inquiries[j].Status == "Pending")
+                    {
+                        pendingTrainerInfo.Add(Model.AllUsers[k]);
+                    }
+                    else if(Model.Trainers[i].Id == Model.AllUsers[k].Id && !pendingTrainerInfo.Contains(Model.AllUsers[k]) &&
+                            Model.Inquiries[j].Status == "Accepted") {
+                        AcceptedTrainerInfo.Add(Model.AllUsers[k]);
+                    }
+                }
+            }
+        }
+    }
+}
+
+<h1>Trainers</h1>
+
+
+@if (Model.Inquiries.Count() != 0){
+    <table class="table talbe-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllUsers[0].FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AllUsers[0].LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Inquiries[0].Status)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (MyCustomUser item in AcceptedTrainerInfo) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    @foreach (Trainer trainers in Model.Trainers)
+                    {
+                        if (trainers.Id == item.Id)
+                        {
+                            foreach (Inquiry inquiries in Model.Inquiries)
+                            {
+                                if (inquiries.TrainerId == trainers.TrainerId)
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => inquiries.Status)
+                                    </td>
+                                    <td>
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Meal Plan</a>
+                                            <a class="btn btn-primary" asp-action="Inquiry" asp-route-id="@item.Id">Workout Plan</a>
+                                    </td>
+                                }
+                            }
+                        }
+                    }
+                </tr>
+            }
+            @foreach (MyCustomUser item in pendingTrainerInfo) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    @foreach (Trainer trainers in Model.Trainers)
+                    {
+                        if (trainers.Id == item.Id)
+                        {
+                            foreach (Inquiry inquiries in Model.Inquiries)
+                            {
+                                if (inquiries.TrainerId == trainers.TrainerId)
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => inquiries.Status)
+                                    </td>
+                                    if (inquiries.Status == "Accepted")
+                                    {
+                                        <td>
+                                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.Id">Meal Plan</a>
+                                            <a class="btn btn-primary" asp-action="Inquiry" asp-route-id="@item.Id">Workout Plan</a>
+                                        </td>
+                                    }
+                                }
+                            }
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h2>There are no trainers for this page</h2>
+}
+<nav aria-label="Trainer List Page">
+    <ul class="pagination">
+        @for(int i = 1; i <= Model.LastPage; i++)
+        {
+            if(i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link">@i</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-id="@UserManager.GetUserId(this.User)">@i</a>
+                </li>
+            }
+            
+        }
+    </ul>
+    
+</nav>

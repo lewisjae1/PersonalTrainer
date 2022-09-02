@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PersonalTrainer.Data;
 using PersonalTrainer.Models;
 
 namespace PersonalTrainer.Areas.Identity.Pages.Account.Manage
@@ -17,13 +18,16 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<MyCustomUser> _userManager;
         private readonly SignInManager<MyCustomUser> _signInManager;
+        private readonly IWebHostEnvironment _environment;
 
         public IndexModel(
             UserManager<MyCustomUser> userManager,
-            SignInManager<MyCustomUser> signInManager)
+            SignInManager<MyCustomUser> signInManager,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _environment = environment;
         }
 
         /// <summary>
@@ -59,18 +63,25 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Profile Photo")]
+            public IFormFile UserPhoto { get; set; }
+
+            public string UserPhotoURL { get; set; }
         }
 
         private async Task LoadAsync(MyCustomUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var imageURL = user.UserPhotoURL;
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                UserPhotoURL = imageURL
             };
         }
 
@@ -98,6 +109,23 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account.Manage
             {
                 await LoadAsync(user);
                 return Page();
+            }
+
+            if (Input.UserPhoto != null)
+            {
+                if(user.UserPhotoURL != null)
+                {
+                    System.IO.File.Delete(Path.Combine(_environment.WebRootPath, "images", user.UserPhotoURL));
+                }
+
+                string imageName = Guid.NewGuid().ToString();
+                imageName += Path.GetExtension(Input.UserPhoto.FileName);
+
+                string uploadPath = Path.Combine(_environment.WebRootPath, "images", imageName);
+                using Stream fileStream = new FileStream(uploadPath, FileMode.Create);
+                await Input.UserPhoto.CopyToAsync(fileStream);
+                user.UserPhotoURL = imageName;
+                await _userManager.UpdateAsync(user);
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

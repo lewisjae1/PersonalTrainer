@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using PersonalTrainer.Data;
 using PersonalTrainer.Models;
 #nullable disable
 
@@ -32,6 +33,8 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
         public RegisterModel(
             UserManager<MyCustomUser> userManager,
@@ -39,7 +42,9 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             SignInManager<MyCustomUser> signInManager,
             ILogger<RegisterModel> logger,
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext applicationDbContext,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,6 +53,8 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
             _logger = logger;
             _roleManager = roleManager;
             _emailSender = emailSender;
+            _context = applicationDbContext;
+            _environment = environment;
         }
 
         /// <summary>
@@ -122,6 +129,9 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
 
             [Required, Display(Name ="Date of birth")]
             public DateTime DateOfBirth { get; set; }
+
+            [Display(Name = "Profile Photo")]
+            public IFormFile UserPhoto { get; set; }
         }
 
 
@@ -147,6 +157,17 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 firstName = Capitalize(firstName);
                 lastName = Capitalize(lastName);
 
+                if (Input.UserPhoto != null)
+                {
+                    string imageName = Guid.NewGuid().ToString();
+                    imageName += Path.GetExtension(Input.UserPhoto.FileName);
+
+                    string uploadPath = Path.Combine(_environment.WebRootPath, "images", imageName);
+                    using Stream fileStream = new FileStream(uploadPath, FileMode.Create);
+                    await Input.UserPhoto.CopyToAsync(fileStream);
+                    user.UserPhotoURL = imageName;
+                }
+
                 user.Gender = Input.Gender;
                 user.FirstName = firstName;
                 user.LastName = lastName;
@@ -155,6 +176,18 @@ namespace PersonalTrainer.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (Input.UserRole == "fa8f193f-6700-4a5e-9f49-a699ee52b37a")
+                {
+                    Trainer newTrainer = new Trainer()
+                    {
+                        Id = user.Id,
+                        Listed = false
+                    };
+
+                    await _context.Trainers.AddAsync(newTrainer);
+                    await _context.SaveChangesAsync();
+                }
 
                 if (result.Succeeded)
                 {
