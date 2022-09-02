@@ -22,18 +22,18 @@ namespace PersonalTrainer.Controllers
         // GET: TrainersList
         public async Task<IActionResult> Index(int? id)
         {
-            const int NumGamesToDisplayPerPage = 3;
+            const int NumTrainersToDisplayPerPage = 10;
             const int PageOffset = 1; // Need a page offset to use current page and figure out, num games to skip
             int currentPage = id ?? 1;
 
-            int totalNumOfProducts = await _context.Trainers.CountAsync();
-            double maxNumPages = Math.Ceiling((double)totalNumOfProducts / NumGamesToDisplayPerPage);
+            int totalNumOfTrainers = await _context.Trainers.Where(t => t.Listed == true).CountAsync();
+            double maxNumPages = Math.Ceiling((double)totalNumOfTrainers / NumTrainersToDisplayPerPage);
             int lastPage = Convert.ToInt32(maxNumPages); // Rounding pages up, to next whole page number
 
             // Get all games from the DB
-            List<Trainer> trainers = await _context.Trainers
-                                    .Skip(NumGamesToDisplayPerPage * (currentPage - PageOffset))
-                                    .Take(NumGamesToDisplayPerPage).Where(t => t.Listed == true).ToListAsync();
+            List<Trainer> trainers = await _context.Trainers.Where(t => t.Listed == true)
+                                    .Skip(NumTrainersToDisplayPerPage * (currentPage - PageOffset))
+                                    .Take(NumTrainersToDisplayPerPage).ToListAsync();
 
             List<MyCustomUser> allUsers = await _context.MyCustomUsers.ToListAsync();
 
