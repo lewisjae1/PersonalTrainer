@@ -30,5 +30,7 @@ namespace PersonalTrainer.Models
         public string? Message { get; set; }
 
         public string? Status { get; set; }
+
+        public ICollection<WorkoutPlan> workoutPlans { get; set; }
     }
 }

@@ -27,6 +27,8 @@ namespace PersonalTrainer.Models
         public ICollection<Trainer> Trainers { get; set; }
 
         public ICollection<Inquiry> Inquiries { get; set; }
+
+        public ICollection<WorkoutPlan> workoutPlans { get; set; }
     }
 
     public class HomeViewModel

@@ -15,6 +15,8 @@ namespace PersonalTrainer.Models
         public bool Listed { get; set; }
 
         public ICollection<Inquiry> Inquiries { get; set; }
+
+        public ICollection<WorkoutPlan> workoutPlans { get; set; }
     }
 
     public class TrainerListViewModel
