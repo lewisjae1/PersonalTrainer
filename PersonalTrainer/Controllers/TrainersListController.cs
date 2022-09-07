@@ -20,6 +20,11 @@ namespace PersonalTrainer.Controllers
         }
 
         // GET: TrainersList
+        /// <summary>
+        /// Shows the list of trainers that are listed on the market
+        /// </summary>
+        /// <param name="id">Page number that user is on</param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(int? id)
         {
             const int NumTrainersToDisplayPerPage = 10;
@@ -42,6 +47,11 @@ namespace PersonalTrainer.Controllers
         }
 
         // GET: TrainersList/Details/5
+        /// <summary>
+        /// Shows the details of selected trainer
+        /// </summary>
+        /// <param name="id">unique Id of the trainer that is selected</param>
+        /// <returns></returns>
         public async Task<IActionResult> Details(string? id)
         {
             if (id == null || _context.Trainers == null)
@@ -60,6 +70,11 @@ namespace PersonalTrainer.Controllers
         }
 
         // GET: TrainersList/Create
+        /// <summary>
+        /// Creates Inquiry
+        /// </summary>
+        /// <param name="id">Unique id of the traienr that is selected</param>
+        /// <returns></returns>
         public async Task<IActionResult> Inquiry(string? id)
         {
             Trainer trainer = await _context.Trainers
@@ -75,6 +90,11 @@ namespace PersonalTrainer.Controllers
         // POST: TrainersList/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Post version of the Inquiry page
+        /// </summary>
+        /// <param name="newInquiry">Inquiry that is created from the get version of the page</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Inquiry(Inquiry newInquiry)

@@ -13,7 +13,12 @@ namespace PersonalTrainer.Controllers
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Index page shows the list of inquired trainers by the user logged in
+        /// </summary>
+        /// <param name="id">id of the user that is logged in</param>
+        /// <param name="page">page number that user is on</param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(string? id, int? page)
         {
             const int NumTrainersToDisplayPerPage = 10;
