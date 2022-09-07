@@ -8,6 +8,9 @@ namespace PersonalTrainer.Data.API
     {
         private static readonly HttpClient _client;
 
+        /// <summary>
+        /// constructor that calls the Web API
+        /// </summary>
         static wgerClient()
         {
             _client = new HttpClient();
@@ -15,7 +18,10 @@ namespace PersonalTrainer.Data.API
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
-
+        /// <summary>
+        /// Calls exercise categories from the API
+        /// </summary>
+        /// <returns>Returns Exercise categories as a list</returns>
         public async static Task<IEnumerable<Category>> getExerciseCategories()
         {
             HttpResponseMessage response = await _client.GetAsync("api/v2/exercisecategory/?language=2");
@@ -31,7 +37,10 @@ namespace PersonalTrainer.Data.API
                 return null;
             }
         }
-
+        /// <summary>
+        /// Calls the Exercises from the API
+        /// </summary>
+        /// <returns>Returns the exercises from API as a list</returns>
         public async static Task<IEnumerable<ExerciseInfo>> getExercises()
         {
             HttpResponseMessage response = await _client.GetAsync("api/v2/exercise/?language=2");

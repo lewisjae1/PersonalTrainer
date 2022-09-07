@@ -2,6 +2,9 @@
 
 namespace PersonalTrainer.Models
 {
+    /// <summary>
+    /// Helper for the role attribute of the user
+    /// </summary>
 #nullable disable
     public static class IdentityHelper
     {

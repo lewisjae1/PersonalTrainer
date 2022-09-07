@@ -16,7 +16,10 @@ namespace PersonalTrainer.Controllers
         {
             _context = context;
         }
-
+        /// <summary>
+        /// Pass Home view model to the index page to be used.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Index()
         {
             List<MyCustomUser> customUsers = await _context.MyCustomUsers.ToListAsync();
